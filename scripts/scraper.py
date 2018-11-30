@@ -52,7 +52,6 @@ def getTeamsAndPlayers():
     ]
 
     for league in leagues:
-        #stats_soup = getWhoScoredDataSoup('premierleague',"premier-league/startseite/wettbewerb/GB1/saison_id/2018")
         stats_soup = getWhoScoredDataSoup(league[0],league[1])
 
         #print(stats_soup.prettify())
