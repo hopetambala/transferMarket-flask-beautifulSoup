@@ -16,10 +16,8 @@ def loadJson(name):
     return CACHE_DICTION
 
 def getWhoScoredDataSoup(cacheName, specifier):
-    #baseurl = 'https://www.whoscored.com/'
     baseurl = 'https://www.transfermarkt.com/'
 
-    #page_url = baseurl + "/Statistics"
     page_url = baseurl + str(specifier)
     header = {'User-Agent': 'hope'}
 
@@ -41,36 +39,39 @@ def getWhoScoredDataSoup(cacheName, specifier):
     page_soup = BeautifulSoup(page_text, 'html.parser')
     return page_soup
 
-def getStatistics():
-    stats_soup = getWhoScoredDataSoup('premierleague',"premier-league/startseite/wettbewerb/GB1/saison_id/2018")
-    #print(stats_soup.prettify())
+def getTeamsAndPlayers():
+
+    leagues = [
+        ('premierleague','premier-league/startseite/wettbewerb/GB1/saison_id/2018'),
+        ('bundesliga','bundesliga/startseite/wettbewerb/L1/plus/?saison_id=2018'),
+        ('laliga','laliga/startseite/wettbewerb/ES1/plus/?saison_id=2018'),
+        ('ligue1','ligue-1/startseite/wettbewerb/FR1/plus/?saison_id=2018'),
+        ('serieA',"serie-a/startseite/wettbewerb/IT1/plus/?saison_id=2018"),
+        ('mls','major-league-soccer/startseite/wettbewerb/MLS1/plus/?saison_id=2017')
+
+    ]
+
+    for league in leagues:
+        #stats_soup = getWhoScoredDataSoup('premierleague',"premier-league/startseite/wettbewerb/GB1/saison_id/2018")
+        stats_soup = getWhoScoredDataSoup(league[0],league[1])
+
+        #print(stats_soup.prettify())
+
+        #gets me the table
+        divs = stats_soup.find("div", id="yw1").find('tbody')
+
+        rows = divs.find_all('tr')
 
 
-    #name_div = stats_soup.find_all("a",  class_="team-link")
+        for row in rows:
+            #Club Name
+            img = row.find('img',alt=True)
+            print(img['alt'])
 
+            row_of_a= row.find_all('a', href = True,class_='vereinprofil_tooltip')
+            first_element = row_of_a[0]
+            
+            urlExtension = first_element.get('href')
+            print(urlExtension)
 
-    #gets me something statistics-team-table-detailed
-    divs = stats_soup.find("div", id="yw1").find('tbody')
-
-    rows = divs.find_all('tr')
-
-
-    for row in rows:
-        #Club Name
-        img = row.find('img',alt=True)
-        print(img['alt'])
-
-        
-
-
-    # The different tables
-    '''
-    tableNames = ['summary', 'defensive', 'offensive', 'passing']
-    table = soup.find("div", {"id": "statistics-table-" + tableName }).find("tbody", {"id": "player-table-statistics-body"})
-    '''
-
-    '''
-    for name in name_div:
-        print(name)
-    '''
-getStatistics()
+getTeamsAndPlayers()
