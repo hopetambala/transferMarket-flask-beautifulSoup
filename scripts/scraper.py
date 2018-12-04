@@ -1,6 +1,8 @@
 import requests
 import json
 from bs4 import BeautifulSoup
+import csv
+
 
 BASEURL = 'https://www.transfermarkt.com/'
 
@@ -50,17 +52,44 @@ def getTeamsAndPlayers():
         ('mls','major-league-soccer/startseite/wettbewerb/MLS1/plus/?saison_id=2017')
 
     ]
-    #Leage Information loop
+    #League Information loop
+    list_of_leagues = []
+    list_of_teams = []
+    list_of_players = []
     for league in leagues:
-        #League Soup
-        #stats_soup = getWhoScoredDataSoup(league[0],league[1])
         stats_soup = getWhoScoredDataSoup('leagues',league[1])
-        #gets me the table
-        divs = stats_soup.find("div", id="yw1").find('tbody')
+        
+        league_info = stats_soup.find('div', class_='box-personeninfos')
 
-        rows = divs.find_all('tr')
+        table_elements = league_info.find_all('td')
 
+        '''
+        Sample Data Structure
+        First Tier -  United States
+        23 teams
+        672
+        369 Players  54,9%
+        773 Th. €
+        Los Angeles Galaxy  7 time(s)
+        26,5 Years
+        New York Red Bulls
+        Alphonso Davies  10,00 Mill. €
+        '''
+
+        league = []
+        for table in table_elements: #Create table for leagues
+            table_string = table.text
+            table_stripped = table_string.strip(' \t\n\r')
+            latin_stripped = table_stripped.replace(u'\xa0', u' ')
+            league.append(latin_stripped)
+            #print(table_stripped)
+        list_of_leagues.append(league)   
+        
+        divs = stats_soup.find("div", id="yw1").find('tbody') #gets me the teams table so I can crawl further
+        rows = divs.find_all('tr') #Team table rows on league page
+        
         #Team Information Loop
+        team = []
         for row in rows:
             #Club Name
             img = row.find('img',alt=True)
@@ -80,41 +109,74 @@ def getTeamsAndPlayers():
             team_rows_even = team_divs.find_all('tr',class_='even')
             team_rows = team_rows_even + team_rows_odd
             
+            
+            '''
+            25
+            Wilfred Ndidi
+            Defensive Midfield
+            Dec 16, 1996 (21)
+            Nigeria
+            Leicester City
+            '''
             #Player Information Loop
-            for row in team_rows:
+            for row in team_rows: #player table rows on team page
                 #print(row.find("td")) //prints some goodies
-                
+                player = []
                 
                 #Player Number
-                print(row.find('div',class_='rn_nummer').text)
+                #print(row.find('div',class_='rn_nummer').text)
+                player.append(row.find('div',class_='rn_nummer').text)
                 
                 #Player Name
-                print(row.find('td',class_='hide').text)
+                #print(row.find('td',class_='hide').text)
+                player.append(row.find('td',class_='hide').text)
                 
                 #Position
                 all_trs = row.find('table',class_='inline-table').find_all('tr')
                 position = all_trs[1].text
-                print(position)
+                #print(position)
+                player.append(position)
                 
                 #Birthday
-                print(row.find_all('td',class_='zentriert')[1].text) 
+                #print(row.find_all('td',class_='zentriert')[1].text) 
+                player.append(row.find_all('td',class_='zentriert')[1].text) 
                 
                 #Nationality
-                print(row.find('img',class_='flaggenrahmen')['alt'])
+                #print(row.find('img',class_='flaggenrahmen')['alt'])
+                player.append(row.find('img',class_='flaggenrahmen')['alt'])
+
 
                 #Club
-                print(club_name)
-
-                
-                #print(row.prettify())
-                
-                
-                
-                print('')
-
-                #print(row.prettify())
+                #print(club_name)
+                player.append(club_name)
+                list_of_players.append(player)
+    
+    return(list_of_leagues,list_of_players)         
                 
             
-            #print(BASEURL[:29] + urlExtension)
+            
+print('Start Crawl and Scrape')
+leagues, players = getTeamsAndPlayers()
+print('Create CSV')
+try:
+    with open("leagues.csv", "w") as f:
+        writer = csv.writer(f)
+        writer.writerows(leagues)
+except KeyboardInterrupt:
+    print('Exit')
+except:
+    print('Error')
+    pass
 
-getTeamsAndPlayers()
+
+
+try:
+    with open("players.csv", "w") as f:
+        writer = csv.writer(f)
+        writer.writerows(players)
+except KeyboardInterrupt:
+    print('Exit')
+except:
+    print('Error')
+
+print('Finish Creating CSV')
