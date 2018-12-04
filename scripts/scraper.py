@@ -50,7 +50,7 @@ def getTeamsAndPlayers():
         ('mls','major-league-soccer/startseite/wettbewerb/MLS1/plus/?saison_id=2017')
 
     ]
-
+    #Leage Information loop
     for league in leagues:
         #League Soup
         #stats_soup = getWhoScoredDataSoup(league[0],league[1])
@@ -60,7 +60,7 @@ def getTeamsAndPlayers():
 
         rows = divs.find_all('tr')
 
-
+        #Team Information Loop
         for row in rows:
             #Club Name
             img = row.find('img',alt=True)
@@ -80,6 +80,7 @@ def getTeamsAndPlayers():
             team_rows_even = team_divs.find_all('tr',class_='even')
             team_rows = team_rows_even + team_rows_odd
             
+            #Player Information Loop
             for row in team_rows:
                 #print(row.find("td")) //prints some goodies
                 
