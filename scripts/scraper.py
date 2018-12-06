@@ -89,18 +89,37 @@ def getTeamsAndPlayers():
         rows = divs.find_all('tr') #Team table rows on league page
         
         #Team Information Loop
-        team = []
         for row in rows:
             #Club Name
             img = row.find('img',alt=True)
-            club_name = img['alt']
-            
+            #club_name = img['alt']
+
+            teams_info = row.find_all('td')
+
+
+            team = []
+            club_name = teams_info[1].text #for the player model
+            team.append(teams_info[1].text)
+            team.append(teams_info[2].text)
+            team.append(teams_info[3].text)
+            team.append(teams_info[4].text)
+            team.append(teams_info[5].text)
+            team.append(teams_info[6].text)
+            team.append(teams_info[7].text)
+            list_of_teams.append(team)
+            '''
+            for teams in teams_info:
+                print(teams.text)
+            '''
 
             #Club URL
             row_of_a= row.find_all('a', href = True,class_='vereinprofil_tooltip')
             first_element = row_of_a[0]
             
             urlExtension = first_element.get('href')
+
+
+            #Search Through Each URL in the row of Teams to get Player Information
             clubs_soup = getWhoScoredDataSoup('teams',urlExtension[1:]) #removes extra comma
         
             team_divs = clubs_soup.find("div", id="yw1").find('tbody')
@@ -151,12 +170,12 @@ def getTeamsAndPlayers():
                 player.append(club_name)
                 list_of_players.append(player)
     
-    return(list_of_leagues,list_of_players)         
+    return(list_of_leagues,list_of_players,list_of_teams)         
                 
             
             
 print('Start Crawl and Scrape')
-leagues, players = getTeamsAndPlayers()
+leagues, players, teams = getTeamsAndPlayers()
 print('Create CSV')
 try:
     with open("leagues.csv", "w") as f:
@@ -174,6 +193,15 @@ try:
     with open("players.csv", "w") as f:
         writer = csv.writer(f)
         writer.writerows(players)
+except KeyboardInterrupt:
+    print('Exit')
+except:
+    print('Error')
+
+try:
+    with open("teams.csv", "w") as f:
+        writer = csv.writer(f)
+        writer.writerows(teams)
 except KeyboardInterrupt:
     print('Exit')
 except:
