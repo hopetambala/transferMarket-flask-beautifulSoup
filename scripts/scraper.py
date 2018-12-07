@@ -99,13 +99,13 @@ def getTeamsAndPlayers():
 
             team = []
             club_name = teams_info[1].text #for the player model
-            team.append(teams_info[1].text)
-            team.append(teams_info[2].text)
-            team.append(teams_info[3].text)
-            team.append(teams_info[4].text)
-            team.append(teams_info[5].text)
-            team.append(teams_info[6].text)
-            team.append(teams_info[7].text)
+            team.append(teams_info[1].text.strip(' \t\n\r'))
+            team.append(teams_info[2].text.strip(' \t\n\r'))
+            team.append(teams_info[3].text.strip(' \t\n\r'))
+            team.append(teams_info[4].text.strip(' \t\n\r'))
+            team.append(teams_info[5].text.strip(' \t\n\r'))
+            team.append(teams_info[6].text.strip(' \t\n\r'))
+            team.append(teams_info[7].text.strip(' \t\n\r'))
             list_of_teams.append(team)
             '''
             for teams in teams_info:
