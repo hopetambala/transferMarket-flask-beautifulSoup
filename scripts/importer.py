@@ -26,6 +26,11 @@ def create_soccer_db():
     '''
     cur.execute(statement)
 
+    statement = '''
+        DROP TABLE IF EXISTS 'Teams';
+    '''
+    cur.execute(statement)
+
 
     '''
     Create Tables
@@ -37,6 +42,20 @@ def create_soccer_db():
             'Name' TEXT NOT NULL,
             'NumberOfTeams' TEXT NOT NULL,
             'NumberOfPlayers' TEXT NOT NULL
+        );
+    '''
+    cur.execute(statement)
+
+    statement = '''
+        CREATE TABLE 'Teams' (
+            'Id' INTEGER PRIMARY KEY AUTOINCREMENT,
+            'Name' TEXT NOT NULL,
+            'Nickname' TEXT NOT NULL,
+            'Squad' INTEGER NOT NULL,
+            'AverageAge' REAL NOT NULL,
+            'NumberofForeigners' INTEGER NOT NULL,
+            'TotalMarketValue' INTEGER NOT NULL,
+            'AverageMarketValue' INTEGER NOT NULL
         );
     '''
     cur.execute(statement)
@@ -70,6 +89,33 @@ def populate_soccer_db():
                 statement = 'INSERT INTO "Leagues" '
                 statement += 'VALUES (?, ?, ?, ?)'
                 cur.execute(statement, insertion)
+
+    with open('teams.csv') as csvDataFile:
+        csvReader = csv.reader(csvDataFile)
+        for row in csvReader:
+            #Code to Clean CSV
+            row[3] = float(row[3].replace(',','.'))
+
+
+            if 'Bill' in row[5]:
+                row[5] = row[5][:-8]
+                row[5] += '0,000,000' #billion string
+                row[5] = row[5].replace(',','')
+                row[5] = int(row[5])
+            #print(row[5])
+            elif 'Mill' in row[5]:
+                row[5] = row[5][:-8]
+                row[5] += '0,000' #million string
+                row[5] = row[5].replace(',','')
+                row[5] = int(row[5])
+
+
+
+
+            insertion = (None, row[0], row[1], row[2], row[3], row[4], row[5], row[6])
+            statement = 'INSERT INTO "Teams" '
+            statement += 'VALUES (?, ?, ?, ?, ?, ? ,?, ?)'
+            cur.execute(statement, insertion)
     
     with open('players.csv') as csvDataFile:
         csvReader = csv.reader(csvDataFile)
@@ -82,8 +128,29 @@ def populate_soccer_db():
     conn.commit()
     conn.close()
 
+def clean_csv():
+    with open('teams.csv') as csvDataFile:
+        csvReader = csv.reader(csvDataFile)
+        for row in csvReader:
+            if 'Bill' in row[5]:
+                row[5] = row[5][:-8]
+                row[5] += '0,000,000' #billion string
+                row[5] = row[5].replace(',','')
+                row[5] = int(row[5])
+                #print(row[5])
+            elif 'Mill' in row[5]:
+                row[5] = row[5][:-8]
+                row[5] += '0,000' #million string
+                row[5] = row[5].replace(',','')
+                row[5] = int(row[5])
+                #print(row[5])
+
+
 if __name__ == "__main__":
+    
     create_soccer_db()
     print("Created soccer Database")
     populate_soccer_db()
     print("Populated soccer Database")
+    
+    #clean_csv()
