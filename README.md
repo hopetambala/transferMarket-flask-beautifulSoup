@@ -1,5 +1,5 @@
-# Flask - TransferMarket 
-## Scrape, Crawl, and Load into SQLite Database
+# Flask - TransferMarkt 
+## Scrape and Crawl International Football Information into a SQLite Database
 
 
 Run scraper.py to scrape websites and create CSVs
