@@ -1,8 +1,8 @@
 # Flask - TransferMarkt 
-## Scrape and Crawl International Football Information into a SQLite Database
+Scrape and Crawl International Football Information into a SQLite Database
 
 
-### A typical top-level directory layout
+## Project Layout
 ├── data                      # Folder for Generated JSON Cache, CSVs, and SQLite Database
 ├── scripts                   # Crawling/Scraping Script, Database Importer Script
 ├── static                    # Static Files
@@ -10,7 +10,7 @@
 ├── app.py                    # Main Application
 └── README.md
 
-
+## Getting Started
 Run scraper.py to scrape websites and create CSVs
 ```
 cd data
