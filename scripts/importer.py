@@ -96,21 +96,29 @@ def populate_soccer_db():
             #Code to Clean CSV
             row[3] = float(row[3].replace(',','.'))
 
-
+            #Total Market Value
             if 'Bill' in row[5]:
                 row[5] = row[5][:-8]
                 row[5] += '0,000,000' #billion string
                 row[5] = row[5].replace(',','')
                 row[5] = int(row[5])
-            #print(row[5])
             elif 'Mill' in row[5]:
                 row[5] = row[5][:-8]
                 row[5] += '0,000' #million string
                 row[5] = row[5].replace(',','')
                 row[5] = int(row[5])
 
-
-
+            #Average Market Value
+            if 'Bill' in row[6]:
+                row[6] = row[6][:-8]
+                row[6] += '0,000,000' #billion string
+                row[6] = row[6].replace(',','')
+                row[6] = int(row[6])
+            elif 'Mill' in row[6]:
+                row[6] = row[6][:-8]
+                row[6] += '0,000' #million string
+                row[6] = row[6].replace(',','')
+                row[6] = int(row[6])
 
             insertion = (None, row[0], row[1], row[2], row[3], row[4], row[5], row[6])
             statement = 'INSERT INTO "Teams" '
