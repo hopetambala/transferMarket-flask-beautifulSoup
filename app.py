@@ -66,8 +66,8 @@ def multiLine():
     return render_template('charts.html',
                            graphJSON=graphJSON)
 
-@app.route('/test')
-def test():
+@app.route('/market_value_comparison')
+def marketValues():
     rows = get_teams()
     df = pd.DataFrame( [[ij for ij in i] for i in rows] )
     df.rename(columns={0: 'ID', 1: 'Name', 2: 'Nickname', 3: 'Squad', 4:'Average Age',5:'Number of Foreigners', 6:'Total Market Value', 7:'Average Market Value'}, inplace=True)
@@ -85,7 +85,7 @@ def test():
         title='Total Market Value vs Average Market Value',
         xaxis=dict(type='log', title='Total Market Value' ),
         yaxis=dict(title='Average Market Value' )
-)
+    )
 
     fig = go.Figure(data=[trace], layout=layout)
     #data = [trace]

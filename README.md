@@ -23,4 +23,14 @@ cd data
 python3 ../scripts/importer.py
 ```
 
+Move the created database from data/ to the main project folder
+```
+cd <Main Project Folder>
+mv data/soccerDB.sqlite ./
+```
+
+Run main Flask application
+```
+python3 app.py
+```
 
