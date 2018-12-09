@@ -68,7 +68,8 @@ def create_soccer_db():
             'Position' TEXT NOT NULL,
             'Birthday' TEXT NOT NULL,
             'Nationality' TEXT NOT NULL,
-            'Team' TEXT NOT NULL
+            'Team' TEXT NOT NULL,
+            'Market Value' INTEGER NOT NULL
         );
     '''
     
@@ -78,7 +79,7 @@ def create_soccer_db():
     conn.close()
 
 def populate_soccer_db():
-    # Connect to big10 database
+    # Connect to soccer database
     conn = sqlite.connect('soccerDB.sqlite')
     cur = conn.cursor()
 
@@ -128,37 +129,42 @@ def populate_soccer_db():
     with open('players.csv') as csvDataFile:
         csvReader = csv.reader(csvDataFile)
         for row in csvReader:
-                insertion = (None, row[0], row[1], row[2], row[3],row[4],row[5])
-                statement = 'INSERT INTO "Players" '
-                statement += 'VALUES (?, ?, ?, ?, ?, ?,?)'
-                cur.execute(statement, insertion)
+            if 'Mill' in row[6]:
+                row[6] = row[6][:-10]
+                row[6] += '0,000' #million string
+                row[6] = row[6].replace(',','')
+                row[6] = int(row[6])
+            elif 'Th' in row[6]:
+                row[6] = row[6][:-8]
+                row[6] += '000' #thousand string
+                row[6] = row[6].replace(',','')
+                row[6] = int(row[6])
+
+            insertion = (None, row[0], row[1], row[2], row[3],row[4],row[5],row[6])
+            statement = 'INSERT INTO "Players" '
+            statement += 'VALUES (?, ?, ?, ?, ?, ?,?,?)'
+            cur.execute(statement, insertion)
     # Close connection
     conn.commit()
     conn.close()
 
-def clean_csv():
-    with open('teams.csv') as csvDataFile:
+def test_csv():
+    with open('players.csv') as csvDataFile:
         csvReader = csv.reader(csvDataFile)
         for row in csvReader:
-            if 'Bill' in row[5]:
-                row[5] = row[5][:-8]
-                row[5] += '0,000,000' #billion string
-                row[5] = row[5].replace(',','')
-                row[5] = int(row[5])
-                #print(row[5])
-            elif 'Mill' in row[5]:
-                row[5] = row[5][:-8]
-                row[5] += '0,000' #million string
-                row[5] = row[5].replace(',','')
-                row[5] = int(row[5])
-                #print(row[5])
+            if 'Th' in row[6]:
+                row[6] = row[6][:-8]
+                row[6] += '000' #thousand string
+                row[6] = row[6].replace(',','')
+                row[6] = int(row[6])
+                print(row[6])
 
 
 if __name__ == "__main__":
-    
     create_soccer_db()
     print("Created soccer Database")
     populate_soccer_db()
     print("Populated soccer Database")
-    
-    #clean_csv()
+    '''
+    test_csv()
+    '''

@@ -164,10 +164,13 @@ def getTeamsAndPlayers():
                 #print(row.find('img',class_='flaggenrahmen')['alt'])
                 player.append(row.find('img',class_='flaggenrahmen')['alt'])
 
-
                 #Club
                 #print(club_name)
                 player.append(club_name)
+
+                #Market Value
+                player.append(row.find('td',class_='rechts hauptlink').text)
+
                 list_of_players.append(player)
     
     return(list_of_leagues,list_of_players,list_of_teams)         
