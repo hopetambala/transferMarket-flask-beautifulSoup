@@ -81,8 +81,15 @@ def test():
         mode='markers'
     )
 
-    data = [trace]
-    graphJSON = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
+    layout = go.Layout(
+        title='Total Market Value vs Average Market Value',
+        xaxis=dict(type='log', title='Total Market Value' ),
+        yaxis=dict(title='Average Market Value' )
+)
+
+    fig = go.Figure(data=[trace], layout=layout)
+    #data = [trace]
+    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return render_template('charts.html', graphJSON=graphJSON)
 
 
