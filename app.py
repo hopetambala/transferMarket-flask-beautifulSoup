@@ -16,55 +16,12 @@ app = Flask(__name__)
 def index():    
     return render_template("index.html")
 
-
 @app.route('/teams')
 def teams():
 
     rows = get_teams()
     
     return render_template("list_teams.html",rows = rows)
-
-@app.route('/showLineChart')
-def line():
-    count = 500
-    xScale = np.linspace(0, 100, count)
-    yScale = np.random.randn(count)
- 
-    # Create a trace
-    trace = go.Scatter(
-        x = xScale,
-        y = yScale
-    )
- 
-    data = [trace]
-    graphJSON = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
-    return render_template('charts.html', graphJSON=graphJSON)
-
-@app.route('/showMultiChart')
-def multiLine():
-    count = 500
-    xScale = np.linspace(0, 100, count)
-    y0_scale = np.random.randn(count)
-    y1_scale = np.random.randn(count)
-    y2_scale = np.random.randn(count)
- 
-    # Create traces
-    trace0 = go.Scatter(
-        x = xScale,
-        y = y0_scale
-    )
-    trace1 = go.Scatter(
-        x = xScale,
-        y = y1_scale
-    )
-    trace2 = go.Scatter(
-        x = xScale,
-        y = y2_scale
-    )
-    data = [trace0, trace1, trace2]
-    graphJSON = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
-    return render_template('charts.html',
-                           graphJSON=graphJSON)
 
 @app.route('/market_value_team_comparison')
 def marketValues():
@@ -119,6 +76,64 @@ def marketValuesPlayers():
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return render_template('charts.html', graphJSON=graphJSON)
 
+@app.route('/players_detailed')
+def teamsPlot():
+    rows = get_players()
+
+    df = pd.DataFrame( [[ij for ij in i] for i in rows] )
+    df.rename(columns={0: 'ID', 1: 'JerseyNumber', 2: 'Name', 3: 'Position', 4:'Birthday',5:'Nationality', 6:'Team', 7:'Market Value'}, inplace=True)
+    #df = df.sort_values(['Market Value'], ascending=[1])
+ 
+    # Create a trace
+    trace = go.Table(
+        header=dict(values=list(df.columns),
+                    fill = dict(color='#C2D4FF'),
+                    align = ['left'] * 5),
+        cells=dict(values=[df.ID, df.JerseyNumber, df.Name, df.Position,df.Birthday, df.Nationality, df.Team, df['Market Value']],
+                fill = dict(color='#F5F8FF'),
+                align = ['left'] * 5)
+        )
+
+    layout = go.Layout(
+        title='Players in the Top Leagues Around the World Ranked by Value',
+    )
+
+    fig =go.Figure(data=[trace],layout=layout)
+    #data = [trace]
+
+    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    return render_template('charts.html', graphJSON=graphJSON)
+
+
+@app.route('/positions')
+def positionsBarChart():
+    rows = count_player_positions()
+    print(rows)
+
+    df = pd.DataFrame( [[ij for ij in i] for i in rows] )
+    df.rename(columns={0: 'Position', 1: 'Count of Position', 2: 'Average Market Value for Position'}, inplace=True)
+    #df = df.sort_values(['Market Value'], ascending=[1])
+ 
+    # Create a trace
+    trace = [
+        go.Bar(
+            x=df['Position'], # assign x as the dataframe column 'x'
+            y=df['Count of Position']
+            #hoverlabel=df['Team']
+        )
+    ]
+
+    layout = go.Layout(
+        title='Positions vs Count of Positions for Top 5 leagues in Europe and MLS',
+        xaxis=dict(title='Position' ),
+        yaxis=dict(title='Count of Positions' )
+    )
+    
+
+    fig = go.Figure(data=trace, layout=layout)
+    #data = trace
+    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    return render_template('charts.html', graphJSON=graphJSON)
 
 if __name__ == '__main__':  
     print('starting Flask app', app.name)  
