@@ -3,3 +3,4 @@ static/.DS_Store
 __pycache__/queries.cpython-37.pyc
 __pycache__/queries.cpython-37.pyc
 *.pyc
+.DS_Store
