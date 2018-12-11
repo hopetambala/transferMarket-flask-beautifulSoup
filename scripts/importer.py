@@ -69,7 +69,8 @@ def create_soccer_db():
             'Birthday' TEXT NOT NULL,
             'Nationality' TEXT NOT NULL,
             'Team' TEXT NOT NULL,
-            'Market Value' INTEGER NOT NULL
+            'Market Value' INTEGER NOT NULL,
+            FOREIGN KEY(Team) REFERENCES Teams(Name)
         );
     '''
     
