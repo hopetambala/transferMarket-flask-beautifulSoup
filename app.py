@@ -141,7 +141,6 @@ def positions_Bar_Chart():
 @app.route('/positions_market_value')
 def positions_market_value_Bar_Chart():
     rows = count_player_positions()
-    print(rows)
 
     df = pd.DataFrame( [[ij for ij in i] for i in rows] )
     df.rename(columns={0: 'Position', 1: 'Count of Position', 2: 'Average Market Value for Position'}, inplace=True)
@@ -166,6 +165,33 @@ def positions_market_value_Bar_Chart():
 
     fig = go.Figure(data=trace, layout=layout)
     #data = trace
+    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    return render_template('charts.html', graphJSON=graphJSON)
+
+@app.route('/players_vs_teams')
+def players_market_vs_teams():
+    rows = players_vs_teams()
+
+    df = pd.DataFrame( [[ij for ij in i] for i in rows] )
+    df.rename(columns={0: 'Name', 1: 'Team', 2: 'Players Market Value',3:'Teams Total Market Value'}, inplace=True)
+ 
+    # Create a trace
+    trace = go.Scatter(
+        x=df['Teams Total Market Value'],
+        y=df['Players Market Value'],
+        text=df['Name'] +','+df['Team'],
+        mode='markers'
+    )
+
+    layout = go.Layout(
+        title='Players Market Value vs Teams Market Value',
+        hovermode= 'closest',
+        xaxis=dict(type='log',autorange=True,title='Teams Market Value'),
+        yaxis=dict(title='Players Market Value' )
+    )
+
+    fig = go.Figure(data=[trace], layout=layout)
+    #data = [trace]
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return render_template('charts.html', graphJSON=graphJSON)
 
