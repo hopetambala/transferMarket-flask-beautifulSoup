@@ -40,6 +40,7 @@ def marketValues():
 
     layout = go.Layout(
         title='Total Market Value vs Average Market Value',
+        hovermode= 'closest',
         xaxis=dict(type='log', title='Total Market Value' ),
         yaxis=dict(title='Average Market Value' )
     )
@@ -67,7 +68,8 @@ def marketValuesPlayers():
 
     layout = go.Layout(
         title='Jersey Number vs Player Market Value',
-        xaxis=dict(title='Jersey Number' ),
+        hovermode= 'closest',
+        xaxis=dict(title='Jersey Number'),
         yaxis=dict(title='Player Market Value' )
     )
 
@@ -77,7 +79,7 @@ def marketValuesPlayers():
     return render_template('charts.html', graphJSON=graphJSON)
 
 @app.route('/players_detailed')
-def teamsPlot():
+def teams_table_plot():
     rows = get_players()
 
     df = pd.DataFrame( [[ij for ij in i] for i in rows] )
@@ -106,7 +108,7 @@ def teamsPlot():
 
 
 @app.route('/positions')
-def positionsBarChart():
+def positions_Bar_Chart():
     rows = count_player_positions()
     print(rows)
 
@@ -125,8 +127,40 @@ def positionsBarChart():
 
     layout = go.Layout(
         title='Positions vs Count of Positions for Top 5 leagues in Europe and MLS',
+        hovermode= 'closest',
         xaxis=dict(title='Position' ),
         yaxis=dict(title='Count of Positions' )
+    )
+    
+
+    fig = go.Figure(data=trace, layout=layout)
+    #data = trace
+    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    return render_template('charts.html', graphJSON=graphJSON)
+
+@app.route('/positions_market_value')
+def positions_market_value_Bar_Chart():
+    rows = count_player_positions()
+    print(rows)
+
+    df = pd.DataFrame( [[ij for ij in i] for i in rows] )
+    df.rename(columns={0: 'Position', 1: 'Count of Position', 2: 'Average Market Value for Position'}, inplace=True)
+    #df = df.sort_values(['Market Value'], ascending=[1])
+ 
+    # Create a trace
+    trace = [
+        go.Bar(
+            x=df['Position'], # assign x as the dataframe column 'x'
+            y=df['Average Market Value for Position']
+            #hoverlabel=df['Team']
+        )
+    ]
+
+    layout = go.Layout(
+        title='Positions vs Average Market Value for Position for Top 5 leagues in Europe and MLS',
+        hovermode= 'closest',
+        xaxis=dict(title='Position' ),
+        yaxis=dict(title='Average Market Value for Position')
     )
     
 
