@@ -6,7 +6,7 @@ Scrape and Crawl International Football Information into a SQLite Database
 ├── data                      # Folder for Generated JSON Cache, CSVs, and SQLite Database
 ├── scripts                   # Crawling/Scraping Script, Database Importer Script
 ├── static                    # Static Files
-├── templates                 # HTML Templates
+├── templates                 # HTML Templates 
 ├── app.py                    # Main Application
 └── README.md
 
