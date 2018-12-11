@@ -2,15 +2,19 @@
 Scrape and Crawl International Football Information into a SQLite Database
 
 
+## Description
+This applicaiton scrapes and crawls through multiple pages of this data source:(TransferMarkt.com)[https://www.transfermarkt.com/], a soccer website that displays the market value of multiple soccer teams and players.
+
+
 ## Project Layout
-├── data                      # Folder for Generated JSON Cache, CSVs, and SQLite Database
-├── scripts                   # Crawling/Scraping Script, Database Importer Script
-├── static                    # Static Files
-├── templates                 # HTML Templates
-├── app.py                    # Main Application
-├── queries.py                # SQLite Database Queries
-├── Procfile                  # Heroku File to Run App on Web
-└── README.md
+    ├── data                      # Folder for Generated JSON Cache, CSVs, and SQLite Database
+    ├── scripts                   # Crawling/Scraping Script, Database Importer Script
+    ├── static                    # Static Files
+    ├── templates                 # HTML Templates
+    ├── app.py                    # Main Application
+    ├── queries.py                # SQLite Database Queries
+    ├── Procfile                  # Heroku File to Run App on Web
+    └── README.md
 
 ## Getting Started
 Run scraper.py to scrape websites and create CSVs
@@ -34,6 +38,19 @@ mv data/soccerDB.sqlite ./
 Run main Flask application
 ```
 python3 app.py
+```
+
+## Testing
+To Test Database (Make sure you're in the virtual environmenta)
+```
+python3 test.py
+```
+
+To Test Data Sources
+
+```
+cd data/
+python3 test.py
 ```
 
 
