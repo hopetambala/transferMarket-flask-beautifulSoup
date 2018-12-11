@@ -42,3 +42,19 @@ def count_player_positions():
 
     rows = cur.fetchall()
     return(rows)
+
+def players_vs_teams():
+    statement = '''
+        SELECT Players.Name, Players.Team, Players.'Market Value',Teams.TotalMarketValue from Players
+            JOIN Teams
+                ON Teams.Name=Players.Team
+            WHERE Players.'Market Value'
+            ORDER BY Players.'Market Value' DESC
+    '''
+
+    conn = sqlite.connect('soccerDB.sqlite')
+    cur = conn.cursor()
+    cur.execute(statement)
+
+    rows = cur.fetchall()
+    return(rows)
