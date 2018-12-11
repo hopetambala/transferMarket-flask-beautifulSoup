@@ -34,3 +34,9 @@ Run main Flask application
 python3 app.py
 ```
 
+
+#Heroku Details
+https://transfrmarkt-flask.herokuapp.com/
+https://git.heroku.com/transfrmarkt-flask.git
+
+
