@@ -8,6 +8,8 @@ Scrape and Crawl International Football Information into a SQLite Database
 ├── static                    # Static Files
 ├── templates                 # HTML Templates
 ├── app.py                    # Main Application
+├── queries.py                # SQLite Database Queries
+├── Procfile                  # Heroku File to Run App on Web
 └── README.md
 
 ## Getting Started
