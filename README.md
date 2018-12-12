@@ -3,7 +3,7 @@ Scrape and Crawl International Football Information into a SQLite Database
 
 
 ## Description
-This application scrapes and crawls through multiple pages of this data source:(TransferMarkt.com)[https://www.transfermarkt.com/], a soccer website that displays the market value of multiple soccer teams and players.
+This application scrapes and crawls through multiple pages of this data source: [TransferMarket.com](https://www.transfermarkt.com/), a soccer website that displays the market value of multiple soccer teams and players.
 
 
 ## Project Layout
@@ -62,7 +62,7 @@ python3 test.py
 
 
 #Heroku Details
-https://transfrmarkt-flask.herokuapp.com/
-https://git.heroku.com/transfrmarkt-flask.git
+    https://transfrmarkt-flask.herokuapp.com/
+    https://git.heroku.com/transfrmarkt-flask.git
 
 
